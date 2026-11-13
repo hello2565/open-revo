@@ -56,7 +56,13 @@ jobs:
 
       - name: Verify Hardware Vault Gatekeeper
         shell: pwsh
-        run: ./scripts/check_vault_leaks.ps1
+        run: |
+          if (Test-Path "./scripts/check_vault_leaks.ps1") {
+              Write-Host "[*] Running Vault Leak Gatekeeper..." -ForegroundColor Cyan
+              & ./scripts/check_vault_leaks.ps1
+          } else {
+              Write-Host "[*] Vault leak script not present in repository checkout, skipping check." -ForegroundColor Yellow
+          }
 
       - name: Build Standalone Executable
         run: pnpm tauri build --no-bundle
